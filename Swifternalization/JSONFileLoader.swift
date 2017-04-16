@@ -10,6 +10,20 @@ Simple JSON file loader.
 */
 final class JSONFileLoader {
     
+    // MARK: - Load from folder
+    class func loadTranslations(_ countryCode: CountryCode, folder: URL) -> JSONDictionary {
+        return self.load(countryCode, folder: folder) ?? [:]
+    }
+    
+    class func loadExpressions(_ countryCode: CountryCode, folder: URL) -> [String : String] {
+        return self.load("expressions", folder: folder)?[countryCode] as? [String : String] ?? [:]
+    }
+    
+    private class func load(_ fileName: String, folder: URL) -> JSONDictionary? {
+        return load(folder.appendingPathComponent("\(fileName).json"))
+    }
+    
+    // MARK: - Bundle loading
     /**
     Loads translations dict for specified language.
     
