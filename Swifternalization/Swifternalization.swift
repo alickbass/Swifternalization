@@ -187,6 +187,35 @@ final public class Swifternalization {
         configured = true
     }
     
+    private func load(folder: URL, language: String) {
+        // Set base and prefered languages.
+        let base = "base"
+        
+        /*
+         Load base and prefered language expressions from expressions.json,
+         convert them into SharedExpression objects and process them and return
+         array only of unique expressions. `SharedExpressionsProcessor` do its
+         own things inside like check if expression is unique or overriding base
+         expressions by prefered language ones if there is such expression.
+         */
+        let baseExpressions = SharedExpressionsLoader.loadExpressions(JSONFileLoader.loadExpressions(base, folder: folder))
+        let languageExpressions = SharedExpressionsLoader.loadExpressions(JSONFileLoader.loadExpressions(language, folder: folder))
+        let expressions = SharedExpressionsProcessor.processSharedExpression(language, preferedLanguageExpressions: languageExpressions, baseLanguageExpressions: baseExpressions)
+        
+        /*
+         Load base and prefered language translations from proper language files
+         specified by `language` constant. Convert them into arrays of
+         `LoadedTranslation`s and then process and convert into `Translation`
+         objects using `LoadedTranslationsProcessor`.
+         */
+        let baseTranslations = TranslationsLoader.loadTranslations(JSONFileLoader.loadTranslations(base, folder: folder))
+        let languageTranslations = TranslationsLoader.loadTranslations(JSONFileLoader.loadTranslations(language, folder: folder))
+        
+        // Store processed translations in `translations` variable for future use.
+        translations = LoadedTranslationsProcessor.processTranslations(baseTranslations, preferedLanguageTranslations: languageTranslations, sharedExpressions: expressions)
+        configured = true
+    }
+    
     /** 
     Get preferred language of user's device.
     */
