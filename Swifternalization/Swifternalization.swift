@@ -43,7 +43,7 @@ final public class Swifternalization {
     
     // MARK: Public Methods
     
-    public class func configure(folder: URL, language: String) {
+    public class func configure(folder: URL, language: String? = nil) {
         sharedInstance.load(folder: folder, language: language)
     }
     
@@ -191,10 +191,10 @@ final public class Swifternalization {
         configured = true
     }
     
-    private func load(folder: URL, language: String) {
+    private func load(folder: URL, language: String?) {
         // Set base and prefered languages.
         let base = "base"
-        
+        let language = language ?? getPreferredLanguage(.main)
         /*
          Load base and prefered language expressions from expressions.json,
          convert them into SharedExpression objects and process them and return
