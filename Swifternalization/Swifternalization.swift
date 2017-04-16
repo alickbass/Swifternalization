@@ -43,6 +43,10 @@ final public class Swifternalization {
     
     // MARK: Public Methods
     
+    public class func configure(folder: URL, language: String) {
+        sharedInstance.load(folder: folder, language: language)
+    }
+    
     /**
     Call the method to configure Swifternalization.
     
